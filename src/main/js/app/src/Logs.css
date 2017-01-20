@@ -1,0 +1,84 @@
+.logs > * {
+    margin-bottom: 1em;
+}
+
+.logs .channel {
+    margin-left: 1em;
+    margin-right: 1em;
+}
+
+.logs .nav {
+    position: relative;
+    width: 35em;
+    display: inline-block;
+    margin-bottom: 1em;
+}
+
+.logs .nav > * {
+    margin: 1em;
+}
+
+.logs .nav .prev {
+    position: absolute;
+    left: 0;
+    top: 0;
+    margin: 0;
+}
+
+
+.logs .nav .next {
+    position: absolute;
+    right: 0;
+    top: 0;
+    margin: 0;
+}
+
+.logs .calendar {
+    display: inline-block;
+    width: 40em;
+    line-height: 0;
+}
+
+.logs .calendar .day:hover {
+    background-color: #aaa;
+}
+
+
+.logs .calendar .margin:hover {
+    background-color: #fff;
+}
+
+.logs .calendar .day.current {
+    background-color: #afa;
+}
+
+.logs .calendar .day {
+    display: inline-block;
+    width: 5em;
+    height: 5em;
+    position: relative;
+    border: 1px dashed #aaaaaa;
+    line-height: 1em;
+}
+
+.logs .calendar .day.margin {
+    color: #aaaaaa;
+}
+
+.logs .calendar .day > * {
+    position: absolute;
+}
+
+.logs .calendar .day .date {
+    margin: 0.5ex;
+}
+
+.logs .calendar .day .count {
+    width: 5em;
+    line-height: 5em;
+}
+
+.logs .messages {
+    text-align: left;
+    padding: 2em;
+}
