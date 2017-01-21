@@ -1,6 +1,6 @@
 package org.eientei.discord;
 
-import net.dv8tion.jda.core.JDA;
+import de.btobastian.javacord.DiscordAPI;
 import org.springframework.format.datetime.DateFormatter;
 
 import java.util.ArrayList;
@@ -14,10 +14,13 @@ public class MessageDTO {
     private String channel;
     private List<MessageRevisionDTO> revisions = new ArrayList<>();
 
-    public MessageDTO(JDA jda, DateFormatter formatter, Message message) {
-        this.id = message.getMid();
-        this.channel = jda.getTextChannelById(message.getChannelId()).getName();
-        revisions.add(new MessageRevisionDTO(jda, formatter, message));
+    public MessageDTO(DiscordAPI api, DateFormatter formatter, MessageLog messageLog) {
+        this.id = messageLog.getMid();
+        this.channel = api.getChannelById(messageLog.getChannelId()).getName();
+        try {
+            revisions.add(new MessageRevisionDTO(api, formatter, messageLog));
+        } catch (Exception ignore) {
+        }
     }
 
     public String getId() {

@@ -7,6 +7,7 @@ const client = rest
     .wrap(errorCode);
 
 const root = 'http://discord.eientei.org:8095/api';
+//const root = 'http://127.0.0.1:8080/api';
 
 class Logs {
     static path = root + '/logs';

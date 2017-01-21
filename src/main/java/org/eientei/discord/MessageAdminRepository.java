@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
  * Created by Alexander Tumin on 2016-11-23.
  */
 @Repository
-public interface MessageAdminRepository extends CrudRepository<Message, Long> {
-    Message findFirstByMidOrderByTimeDesc(String mid);
+public interface MessageAdminRepository extends CrudRepository<MessageLog, Long> {
+    MessageLog findFirstByMidOrderByTimeDesc(String mid);
 }

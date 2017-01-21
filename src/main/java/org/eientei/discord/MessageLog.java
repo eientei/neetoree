@@ -7,7 +7,8 @@ import java.util.Date;
  * Created by Alexander Tumin on 2016-11-14
  */
 @Entity
-public class Message {
+@Table(name = "Message")
+public class MessageLog {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private long id;
@@ -23,16 +24,16 @@ public class Message {
     @Column(columnDefinition = "TEXT")
     private String content;
 
-    public Message(Message one) {
+    public MessageLog(MessageLog one) {
         this.mid = one.getMid();
         this.channelId = one.getChannelId();
         this.authorId = one.getAuthorId();
     }
 
-    public Message() {
+    public MessageLog() {
     }
 
-    public Message(String mid) {
+    public MessageLog(String mid) {
         this.mid = mid;
     }
 

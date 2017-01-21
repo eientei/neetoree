@@ -1,10 +1,11 @@
 package org.eientei.discord;
 
-import net.dv8tion.jda.core.JDA;
-import net.dv8tion.jda.core.entities.User;
+import de.btobastian.javacord.DiscordAPI;
+import de.btobastian.javacord.entities.User;
 import org.springframework.format.datetime.DateFormatter;
 
 import java.util.Locale;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by Alexander Tumin on 2016-11-18
@@ -16,20 +17,17 @@ public class MessageRevisionDTO {
     private String authorAvatar;
     private String content;
 
-    public MessageRevisionDTO(JDA jda, DateFormatter formatter, Message message) {
-        this.id = message.getId();
-        this.time = formatter.print(message.getTime(), Locale.getDefault());
-        User user = jda.getUserById(message.getAuthorId());
+    public MessageRevisionDTO(DiscordAPI api, DateFormatter formatter, MessageLog messageLog) throws ExecutionException, InterruptedException {
+        this.id = messageLog.getId();
+        this.time = formatter.print(messageLog.getTime(), Locale.getDefault());
+        User user = api.getUserById(messageLog.getAuthorId()).get();
         if (user != null) {
             this.authorName = user.getName();
-            this.authorAvatar = user.getAvatarUrl();
-            if (this.authorAvatar == null) {
-                this.authorAvatar = user.getDefaultAvatarUrl();
-            }
+            this.authorAvatar = user.getAvatarUrl().toString();
         } else {
             this.authorName = "Anonymous";
         }
-        this.content = message.getContent();
+        this.content = messageLog.getContent();
     }
 
     public long getId() {

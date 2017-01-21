@@ -6,8 +6,7 @@ class LogsPane extends Component {
             return (
                 <div key={m.id}>
                     [{m.revisions[0].time}]
-                    &lt; <strong>{m.revisions[0].authorName}</strong> &gt;
-                    {m.revisions[0].content ? m.revisions[0].content : (<em>(deleted)</em>)}
+                    &lt; <strong>{m.revisions[0].authorName}</strong> &gt; {m.revisions[0].content ? m.revisions[0].content : (<em>(deleted)</em>)}
                 </div>
             );
         });

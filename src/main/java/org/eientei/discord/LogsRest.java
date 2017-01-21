@@ -1,7 +1,7 @@
 package org.eientei.discord;
 
-import net.dv8tion.jda.core.JDA;
-import net.dv8tion.jda.core.entities.TextChannel;
+import de.btobastian.javacord.DiscordAPI;
+import de.btobastian.javacord.entities.Channel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -16,9 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.text.ParseException;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalUnit;
 import java.util.*;
-import java.util.spi.LocaleServiceProvider;
 import java.util.stream.Collectors;
 
 /**
@@ -31,19 +29,20 @@ public class LogsRest {
     public final static DateFormatter dateformatter = new DateFormatter("yyyy-MM-dd");
     public final static DateFormatter timeformatter = new DateFormatter("HH:mm:ss");
     private final MessageRepository repository;
-    private final JDA jda;
+    private final DiscordAPI api;
 
     @Autowired
-    public LogsRest(MessageRepository repository, JDA jda) {
+    public LogsRest(MessageRepository repository, DiscordAPI api) {
         this.repository = repository;
-        this.jda = jda;
+        this.api = api
+        ;
     }
 
     @RequestMapping(value = "channels")
     public List<String> channels() {
         return repository.findDistinctChannelId()
                 .stream()
-                .map(id -> jda.getTextChannelById(id) != null ? jda.getTextChannelById(id).getName() : null)
+                .map(id -> api.getChannelById(id) != null ? api.getChannelById(id).getName() : null)
                 .collect(Collectors.toList());
     }
 
@@ -51,21 +50,31 @@ public class LogsRest {
     public Page<MessageDTO> messages(@PathVariable String channel, @PathVariable String date, @PageableDefault(size = 10000) Pageable pageable) throws ParseException {
         Date begin = dateformatter.parse(date, Locale.getDefault());
         Date end = Date.from(begin.toInstant().plus(1, ChronoUnit.DAYS));
-        if (jda.getTextChannelsByName(channel, true).isEmpty()) {
+        if (findChannel(channel).isEmpty()) {
             return new PageImpl<>(Collections.emptyList());
         }
-        String channelId = jda.getTextChannelsByName(channel, true).get(0).getId();
+        String channelId = findChannel(channel).get(0).getId();
         return repository.findByChannelIdAndTimeBetweenOrderByTimeAsc(channelId, begin, end, pageable).map(
-                message -> new MessageDTO(jda, timeformatter, message)
+                message -> new MessageDTO(api, timeformatter, message)
         );
+    }
+
+    private List<Channel> findChannel(String name) {
+        List<Channel> channels = new ArrayList<>();
+        for (Channel channel : api.getChannels()) {
+            if (channel.getName().equalsIgnoreCase(name)) {
+                channels.add(channel);
+            }
+        }
+        return channels;
     }
 
     @RequestMapping(value = "dates/{channel}")
     public List<MessageCountDTO> dates(@PathVariable String channel) {
-        if (jda.getTextChannelsByName(channel, true).isEmpty()) {
+        if (findChannel(channel).isEmpty()) {
             return Collections.singletonList(new MessageCountDTO(dateformatter, new MessageCount(new Date(0), 0)));
         }
-        String channelId = jda.getTextChannelsByName(channel, true).get(0).getId();
+        String channelId = findChannel(channel).get(0).getId();
         return repository.findMessageCount(channelId)
                 .stream()
                 .map(c -> new MessageCountDTO(dateformatter, c))

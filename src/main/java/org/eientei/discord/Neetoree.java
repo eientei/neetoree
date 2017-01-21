@@ -1,9 +1,7 @@
 package org.eientei.discord;
 
-import net.dv8tion.jda.core.AccountType;
-import net.dv8tion.jda.core.JDA;
-import net.dv8tion.jda.core.JDABuilder;
-import net.dv8tion.jda.core.exceptions.RateLimitedException;
+import de.btobastian.javacord.DiscordAPI;
+import de.btobastian.javacord.Javacord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -22,15 +20,13 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
-import javax.security.auth.login.LoginException;
-
 /**
  * Created by Alexander Tumin on 2016-11-14
  */
 @SpringBootApplication
 @EnableAutoConfiguration
 @EnableSpringDataWebSupport
-@EnableJpaRepositories(basePackageClasses = Message.class)
+@EnableJpaRepositories(basePackageClasses = MessageLog.class)
 @EnableConfigurationProperties(NeetoreeProperties.class)
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -51,12 +47,23 @@ public class Neetoree {
     }
 
     @Bean
+    public DiscordAPI discordAPI() {
+        DiscordAPI api = Javacord.getApi(properties.getToken(), true);
+        api.setAutoReconnect(true);
+        api.connectBlocking();
+        api.registerListener(new MessagePersister(adminRepository, api));
+        return api;
+    }
+
+    /*
+    @Bean
     public JDA jda() throws LoginException, RateLimitedException {
         JDA jda = new JDABuilder(AccountType.BOT).setToken(properties.getToken()).buildAsync();
         jda.addEventListener(new MessagePersister(adminRepository, jda));
         jda.addEventListener(new CommandDispatcher(jda));
         return jda;
     }
+    */
 
     @Bean
     public WebSecurityConfigurerAdapter securityConfigurerAdapter() {

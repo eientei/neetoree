@@ -39,9 +39,11 @@
 
   <dependencies>
     <dependency>
-      <groupId>net.dv8tion</groupId>
-      <artifactId>JDA</artifactId>
-      <version>3.0.BETA_75</version>
+      <groupId>de.btobastian.javacord</groupId>
+      <artifactId>javacord</artifactId>
+      <version>2.0.14</version>
+      <!-- This will use the shaded javacord which contains all required dependencies -->
+      <classifier>shaded</classifier>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -68,9 +70,8 @@
 
   <repositories>
     <repository>
-      <id>jcenter</id>
-      <name>jcenter-bintray</name>
-      <url>http://jcenter.bintray.com</url>
+      <id>javacord-repo</id>
+      <url>http://repo.bastian-oppermann.de</url>
     </repository>
   </repositories>
 </project>
