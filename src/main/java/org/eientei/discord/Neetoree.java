@@ -2,6 +2,7 @@ package org.eientei.discord;
 
 import de.btobastian.javacord.DiscordAPI;
 import de.btobastian.javacord.Javacord;
+import de.btobastian.sdcf4j.handler.JavacordHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -53,6 +54,11 @@ public class Neetoree {
         api.connectBlocking();
         api.registerListener(new MessagePersister(adminRepository, api));
         return api;
+    }
+
+    @Bean
+    public JavacordHandler handler(DiscordAPI api) {
+        return new JavacordHandler(api);
     }
 
     /*

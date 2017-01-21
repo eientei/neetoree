@@ -42,8 +42,17 @@
       <groupId>de.btobastian.javacord</groupId>
       <artifactId>javacord</artifactId>
       <version>2.0.14</version>
-      <!-- This will use the shaded javacord which contains all required dependencies -->
       <classifier>shaded</classifier>
+    </dependency>
+    <dependency>
+      <groupId>de.btobastian.sdcf4j</groupId>
+      <artifactId>sdcf4j-core</artifactId>
+      <version>1.0.4</version>
+    </dependency>
+    <dependency>
+      <groupId>de.btobastian.sdcf4j</groupId>
+      <artifactId>sdcf4j-javacord</artifactId>
+      <version>1.0.4</version>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
